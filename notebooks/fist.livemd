@@ -1,0 +1,60 @@
+<!-- livebook:{"autosave_interval_s":30} -->
+
+# This is a TURPIA notebook
+
+```elixir
+Mix.install([
+  {:kino, "~> 0.11.0"},
+  {:kino_explorer, "~> 0.1.11"}
+])
+```
+
+## Import data
+
+```elixir
+file_path = "/home/ted/workspace/eli/turpia_umbrella/test_assets/import/in.csv"
+```
+
+<!-- livebook:{"attrs":{"assign_to":"","code":"Turpia.IO.csv_to_db(file_path)","cookie":"","cookie_secret":"COOKIE","node":"turpia@ted-g55590","node_secret":"","node_secret_value":null,"use_cookie_secret":true,"use_node_secret":false},"chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
+
+```elixir
+require Kino.RPC
+node = :"turpia@ted-g55590"
+Node.set_cookie(node, String.to_atom(System.fetch_env!("LB_COOKIE")))
+Kino.RPC.eval_string(node, ~S"Turpia.IO.csv_to_db(file_path)", file: __ENV__.file)
+```
+
+## Accounts
+
+<!-- livebook:{"attrs":{"assign_to":"db_accounts","code":":ok","cookie":"","cookie_secret":"COOKIE","node":"turpia@ted-g55590","node_secret":"","node_secret_value":null,"use_cookie_secret":true,"use_node_secret":false},"chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
+
+```elixir
+require Kino.RPC
+node = :"turpia@ted-g55590"
+Node.set_cookie(node, String.to_atom(System.fetch_env!("LB_COOKIE")))
+db_accounts = Kino.RPC.eval_string(node, ~S":ok", file: __ENV__.file)
+```
+
+## Read Transfers
+
+<!-- livebook:{"attrs":{"assign_to":"trs","code":"Turpia.IO.get_transfers()","cookie":"","cookie_secret":"COOKIE","node":"turpia@ted-g55590","node_secret":"","node_secret_value":null,"use_cookie_secret":true,"use_node_secret":false},"chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
+
+```elixir
+require Kino.RPC
+node = :"turpia@ted-g55590"
+Node.set_cookie(node, String.to_atom(System.fetch_env!("LB_COOKIE")))
+trs = Kino.RPC.eval_string(node, ~S"Turpia.IO.get_transfers()", file: __ENV__.file)
+```
+
+```elixir
+trsDataframe = Explorer.DataFrame.new(trs)
+```
+
+<!-- livebook:{"attrs":{"assign_to":null,"collect":false,"data_frame":"trs","data_frame_alias":"Elixir.Explorer.DataFrame","is_data_frame":false,"lazy":true,"missing_require":"Elixir.Explorer.DataFrame","operations":[{"active":true,"column":null,"data_options":{"amount":"integer","creditor":"float","currency":"string","debitor":"string","source":"string","transfer_date":"date"},"datalist":[],"filter":null,"operation_type":"filters","type":"string","value":null}]},"chunks":null,"kind":"Elixir.KinoExplorer.DataTransformCell","livebook_object":"smart_cell"} -->
+
+```elixir
+require Explorer.DataFrame
+trs |> Explorer.DataFrame.new(lazy: true)
+```
+
+<!-- livebook:{"offset":2603,"stamp":{"token":"XCP.ljN0SYMMkXP4ButaSgxHZnjkJsV3jJwpHa2PmlBt3CPtK0kvEXuVNemUNnth2yjIrH6F_ZyK5reVZgIxuJiOjjFEPGs1qKeWIoQToPoHXQNZ","version":2}} -->
