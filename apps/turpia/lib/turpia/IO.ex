@@ -67,5 +67,6 @@ defmodule Turpia.IO do
   def get_transfers() do
     Transfer
     |> Turpia.Repo.all()
+    |> Transfer.to_dataframe()
   end
 end

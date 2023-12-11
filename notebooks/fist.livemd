@@ -1,60 +1,234 @@
-<!-- livebook:{"autosave_interval_s":30} -->
+<!-- livebook:{"app_settings":{"access_type":"public","output_type":"rich","slug":"turpia"},"autosave_interval_s":30} -->
 
 # This is a TURPIA notebook
 
 ```elixir
 Mix.install([
   {:kino, "~> 0.11.0"},
-  {:kino_explorer, "~> 0.1.11"}
+  {:kino_explorer, "~> 0.1.11"},
+  {:kino_vega_lite, "~> 0.1.10"},
+  {:kino_maplibre, "~> 0.1.10"}
 ])
 ```
 
 ## Import data
 
-```elixir
-file_path = "/home/ted/workspace/eli/turpia_umbrella/test_assets/import/in.csv"
-```
-
-<!-- livebook:{"attrs":{"assign_to":"","code":"Turpia.IO.csv_to_db(file_path)","cookie":"","cookie_secret":"COOKIE","node":"turpia@ted-g55590","node_secret":"","node_secret_value":null,"use_cookie_secret":true,"use_node_secret":false},"chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":"eyJhc3NpZ25fdG8iOiIiLCJjb2RlIjoiZmlsZV9wYXRoID0gXCIvaG9tZS90ZWQvd29ya3NwYWNlL2VsaS90dXJwaWFfdW1icmVsbGEvdGVzdF9hc3NldHMvaW1wb3J0L2luLmNzdlwiXG4jIFR1cnBpYS5JTy5jc3ZfdG9fZGIoZmlsZV9wYXRoKSIsImNvb2tpZSI6IiIsImNvb2tpZV9zZWNyZXQiOiJDT09LSUUiLCJub2RlIjoidHVycGlhQHRlZC1nNTU1OTAiLCJub2RlX3NlY3JldCI6IiIsIm5vZGVfc2VjcmV0X3ZhbHVlIjpudWxsLCJ1c2VfY29va2llX3NlY3JldCI6dHJ1ZSwidXNlX25vZGVfc2VjcmV0IjpmYWxzZX0","chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 require Kino.RPC
 node = :"turpia@ted-g55590"
 Node.set_cookie(node, String.to_atom(System.fetch_env!("LB_COOKIE")))
-Kino.RPC.eval_string(node, ~S"Turpia.IO.csv_to_db(file_path)", file: __ENV__.file)
+
+Kino.RPC.eval_string(
+  node,
+  ~S"""
+  file_path = "/home/ted/workspace/eli/turpia_umbrella/test_assets/import/in.csv"
+  # Turpia.IO.csv_to_db(file_path)
+  """,
+  file: __ENV__.file
+)
 ```
 
-## Accounts
+## Read data
 
-<!-- livebook:{"attrs":{"assign_to":"db_accounts","code":":ok","cookie":"","cookie_secret":"COOKIE","node":"turpia@ted-g55590","node_secret":"","node_secret_value":null,"use_cookie_secret":true,"use_node_secret":false},"chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":"eyJhc3NpZ25fdG8iOiJ3YWxsZXRzX2xpc3QiLCJjb2RlIjoiVHVycGlhLkhvbGRlci5saXN0X3dhbGxldHMoKSIsImNvb2tpZSI6IiIsImNvb2tpZV9zZWNyZXQiOiJDT09LSUUiLCJub2RlIjoidHVycGlhQHRlZC1nNTU1OTAiLCJub2RlX3NlY3JldCI6IiIsIm5vZGVfc2VjcmV0X3ZhbHVlIjpudWxsLCJ1c2VfY29va2llX3NlY3JldCI6dHJ1ZSwidXNlX25vZGVfc2VjcmV0IjpmYWxzZX0","chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 require Kino.RPC
 node = :"turpia@ted-g55590"
 Node.set_cookie(node, String.to_atom(System.fetch_env!("LB_COOKIE")))
-db_accounts = Kino.RPC.eval_string(node, ~S":ok", file: __ENV__.file)
+
+wallets_list =
+  Kino.RPC.eval_string(node, ~S"Turpia.Holder.list_wallets()", file: __ENV__.file)
 ```
 
-## Read Transfers
-
-<!-- livebook:{"attrs":{"assign_to":"trs","code":"Turpia.IO.get_transfers()","cookie":"","cookie_secret":"COOKIE","node":"turpia@ted-g55590","node_secret":"","node_secret_value":null,"use_cookie_secret":true,"use_node_secret":false},"chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":"eyJhc3NpZ25fdG8iOiJhbGxfdHJzIiwiY29kZSI6IlR1cnBpYS5JTy5nZXRfdHJhbnNmZXJzKCkiLCJjb29raWUiOiIiLCJjb29raWVfc2VjcmV0IjoiQ09PS0lFIiwibm9kZSI6InR1cnBpYUB0ZWQtZzU1NTkwIiwibm9kZV9zZWNyZXQiOiIiLCJub2RlX3NlY3JldF92YWx1ZSI6bnVsbCwidXNlX2Nvb2tpZV9zZWNyZXQiOnRydWUsInVzZV9ub2RlX3NlY3JldCI6ZmFsc2V9","chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 require Kino.RPC
 node = :"turpia@ted-g55590"
 Node.set_cookie(node, String.to_atom(System.fetch_env!("LB_COOKIE")))
-trs = Kino.RPC.eval_string(node, ~S"Turpia.IO.get_transfers()", file: __ENV__.file)
+all_trs = Kino.RPC.eval_string(node, ~S"Turpia.IO.get_transfers()", file: __ENV__.file)
 ```
 
 ```elixir
-trsDataframe = Explorer.DataFrame.new(trs)
+all_transfers =
+  Explorer.DataFrame.new(all_trs,
+    dtypes: [
+      debitor: :string,
+      creditor: :string,
+      source: :string,
+      currency: :string,
+      amount: :integer,
+      transfer_date: :date
+    ]
+  )
 ```
 
-<!-- livebook:{"attrs":{"assign_to":null,"collect":false,"data_frame":"trs","data_frame_alias":"Elixir.Explorer.DataFrame","is_data_frame":false,"lazy":true,"missing_require":"Elixir.Explorer.DataFrame","operations":[{"active":true,"column":null,"data_options":{"amount":"integer","creditor":"float","currency":"string","debitor":"string","source":"string","transfer_date":"date"},"datalist":[],"filter":null,"operation_type":"filters","type":"string","value":null}]},"chunks":null,"kind":"Elixir.KinoExplorer.DataTransformCell","livebook_object":"smart_cell"} -->
+## Wallets
+
+<!-- livebook:{"reevaluate_automatically":true} -->
+
+```elixir
+alias Explorer.DataFrame, as: DF
+require Explorer.DataFrame
+
+from_debitors =
+  all_transfers
+  |> DF.mutate_with(&[origin: &1["debitor"]])
+  |> Explorer.DataFrame.mutate(quantity: amount * -1 / 100)
+  |> DF.discard(["source", "creditor", "debitor", "amount"])
+
+from_creditors =
+  all_transfers
+  |> DF.filter(creditor == "")
+  |> DF.mutate_with(&[origin: &1["creditor"]])
+  |> Explorer.DataFrame.mutate(quantity: amount / 100)
+  |> DF.discard(["source", "creditor", "debitor", "amount"])
+
+exploded =
+  DF.concat_rows([from_debitors, from_creditors])
+  |> DF.group_by("origin")
+
+:ok
+```
+
+<!-- livebook:{"attrs":"eyJhc3NpZ25fdG8iOiJ3YWxsZXRzX3N0YXRlIiwiY29sbGVjdCI6dHJ1ZSwiZGF0YV9mcmFtZSI6ImV4cGxvZGVkIiwiZGF0YV9mcmFtZV9hbGlhcyI6IkVsaXhpci5FeHBsb3Jlci5EYXRhRnJhbWUiLCJpc19kYXRhX2ZyYW1lIjpudWxsLCJtaXNzaW5nX3JlcXVpcmUiOiJFbGl4aXIuRXhwbG9yZXIuRGF0YUZyYW1lIiwib3BlcmF0aW9ucyI6W3siYWN0aXZlIjp0cnVlLCJjb2x1bW5zIjpbInF1YW50aXR5Il0sImRhdGFfb3B0aW9ucyI6eyJjdXJyZW5jeSI6InN0cmluZyIsIm9yaWdpbiI6InN0cmluZyIsInF1YW50aXR5IjoiZmxvYXQiLCJ0cmFuc2Zlcl9kYXRlIjoiZGF0ZSJ9LCJvcGVyYXRpb25fdHlwZSI6InN1bW1hcmlzZSIsInF1ZXJ5Ijoic3VtIn1dfQ","chunks":null,"kind":"Elixir.KinoExplorer.DataTransformCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 require Explorer.DataFrame
-trs |> Explorer.DataFrame.new(lazy: true)
+
+wallets_state =
+  exploded
+  |> Explorer.DataFrame.lazy()
+  |> Explorer.DataFrame.new(lazy: true)
+  |> Explorer.DataFrame.summarise(quantity_sum: sum(quantity))
+  |> Explorer.DataFrame.collect()
 ```
 
-<!-- livebook:{"offset":2603,"stamp":{"token":"XCP.ljN0SYMMkXP4ButaSgxHZnjkJsV3jJwpHa2PmlBt3CPtK0kvEXuVNemUNnth2yjIrH6F_ZyK5reVZgIxuJiOjjFEPGs1qKeWIoQToPoHXQNZ","version":2}} -->
+## Sources
+
+<!-- livebook:{"attrs":"eyJhc3NpZ25fdG8iOm51bGwsImNvbGxlY3QiOmZhbHNlLCJkYXRhX2ZyYW1lIjoiYWxsX3RyYW5zZmVycyIsImRhdGFfZnJhbWVfYWxpYXMiOiJFbGl4aXIuRXhwbG9yZXIuRGF0YUZyYW1lIiwiaXNfZGF0YV9mcmFtZSI6bnVsbCwibWlzc2luZ19yZXF1aXJlIjoiRWxpeGlyLkV4cGxvcmVyLkRhdGFGcmFtZSIsIm9wZXJhdGlvbnMiOlt7ImFjdGl2ZSI6dHJ1ZSwiY29sdW1ucyI6WyJzb3VyY2UiXSwiZGF0YV9vcHRpb25zIjp7ImFtb3VudCI6ImludGVnZXIiLCJjcmVkaXRvciI6InN0cmluZyIsImN1cnJlbmN5Ijoic3RyaW5nIiwiZGViaXRvciI6InN0cmluZyIsInNvdXJjZSI6InN0cmluZyIsInRyYW5zZmVyX2RhdGUiOiJkYXRlIn0sIm9wZXJhdGlvbl90eXBlIjoiZ3JvdXBfYnkifSx7ImFjdGl2ZSI6dHJ1ZSwiY29sdW1ucyI6WyJhbW91bnQiXSwiZGF0YV9vcHRpb25zIjp7ImFtb3VudCI6ImludGVnZXIiLCJjcmVkaXRvciI6InN0cmluZyIsImN1cnJlbmN5Ijoic3RyaW5nIiwiZGViaXRvciI6InN0cmluZyIsInNvdXJjZSI6InN0cmluZyIsInRyYW5zZmVyX2RhdGUiOiJkYXRlIn0sIm9wZXJhdGlvbl90eXBlIjoic3VtbWFyaXNlIiwicXVlcnkiOiJzdW0ifV19","chunks":null,"kind":"Elixir.KinoExplorer.DataTransformCell","livebook_object":"smart_cell"} -->
+
+```elixir
+require Explorer.DataFrame
+
+all_transfers
+|> Explorer.DataFrame.lazy()
+|> Explorer.DataFrame.new(lazy: true)
+|> Explorer.DataFrame.group_by("source")
+|> Explorer.DataFrame.summarise(amount_sum: sum(amount))
+```
+
+<!-- livebook:{"attrs":"eyJhc3NpZ25fdG8iOiIiLCJjb2RlIjoiVHVycGlhLklPLnJlbW92ZV90cmFuc2ZlcnNfYnlfc291cmNlKFwiYmI3ZDE1ZWQtMGM0NS00MTJjLThjY2MtNzZiNDI1M2ZmOTQzXCIpIiwiY29va2llIjoiIiwiY29va2llX3NlY3JldCI6IkNPT0tJRSIsIm5vZGUiOiJ0dXJwaWFAdGVkLWc1NTU5MCIsIm5vZGVfc2VjcmV0IjoiIiwibm9kZV9zZWNyZXRfdmFsdWUiOm51bGwsInVzZV9jb29raWVfc2VjcmV0Ijp0cnVlLCJ1c2Vfbm9kZV9zZWNyZXQiOmZhbHNlfQ","chunks":null,"kind":"Elixir.Kino.RemoteExecutionCell","livebook_object":"smart_cell"} -->
+
+```elixir
+require Kino.RPC
+node = :"turpia@ted-g55590"
+Node.set_cookie(node, String.to_atom(System.fetch_env!("LB_COOKIE")))
+
+Kino.RPC.eval_string(
+  node,
+  ~S"Turpia.IO.remove_transfers_by_source(\"bb7d15ed-0c45-412c-8ccc-76b4253ff943\")",
+  file: __ENV__.file
+)
+```
+
+## Plot transfers
+
+<!-- livebook:{"attrs":"eyJjaGFydF90aXRsZSI6bnVsbCwiaGVpZ2h0Ijo4MDAsImxheWVycyI6W3siYWN0aXZlIjp0cnVlLCJjaGFydF90eXBlIjoicnVsZSIsImNvbG9yX2ZpZWxkIjoiY3VycmVuY3kiLCJjb2xvcl9maWVsZF9hZ2dyZWdhdGUiOm51bGwsImNvbG9yX2ZpZWxkX2JpbiI6bnVsbCwiY29sb3JfZmllbGRfc2NhbGVfc2NoZW1lIjpudWxsLCJjb2xvcl9maWVsZF90eXBlIjoibm9taW5hbCIsImRhdGFfdmFyaWFibGUiOiJleHBsb2RlZCIsImdlb2RhdGFfY29sb3IiOiJibHVlIiwibGF0aXR1ZGVfZmllbGQiOm51bGwsImxvbmdpdHVkZV9maWVsZCI6bnVsbCwieF9maWVsZCI6InRyYW5zZmVyX2RhdGUiLCJ4X2ZpZWxkX2FnZ3JlZ2F0ZSI6bnVsbCwieF9maWVsZF9iaW4iOm51bGwsInhfZmllbGRfc2NhbGVfdHlwZSI6bnVsbCwieF9maWVsZF90eXBlIjoidGVtcG9yYWwiLCJ5X2ZpZWxkIjoicXVhbnRpdHkiLCJ5X2ZpZWxkX2FnZ3JlZ2F0ZSI6bnVsbCwieV9maWVsZF9iaW4iOm51bGwsInlfZmllbGRfc2NhbGVfdHlwZSI6bnVsbCwieV9maWVsZF90eXBlIjoicXVhbnRpdGF0aXZlIn1dLCJ2bF9hbGlhcyI6IkVsaXhpci5WZWdhTGl0ZSIsIndpZHRoIjo2MDB9","chunks":null,"kind":"Elixir.KinoVegaLite.ChartCell","livebook_object":"smart_cell"} -->
+
+```elixir
+VegaLite.new(width: 600, height: 800)
+|> VegaLite.data_from_values(exploded, only: ["transfer_date", "quantity", "currency"])
+|> VegaLite.mark(:rule)
+|> VegaLite.encode_field(:x, "transfer_date", type: :temporal)
+|> VegaLite.encode_field(:y, "quantity", type: :quantitative)
+|> VegaLite.encode_field(:color, "currency", type: :nominal)
+```
+
+## Select account to be displayed
+
+```elixir
+wallets_options =
+  Explorer.Series.to_list(wallets_state["origin"]) |> Enum.flat_map(fn str -> ["#{str}": str] end)
+
+IO.inspect(wallets_options)
+chart_options = [all: :all] ++ wallets_options
+IO.inspect(chart_options)
+wallets_input = Kino.Input.select("select wallet", chart_options, default: :all)
+```
+
+```elixir
+require Explorer.DataFrame
+
+defmodule Helper do
+  def filter_transfers(name, transfers) do
+    case name do
+      :all ->
+        transfers
+
+      _ ->
+        Explorer.DataFrame.filter_with(transfers, fn df ->
+          Explorer.Series.equal(df["origin"], "#{name}")
+        end)
+    end
+  end
+
+  def plot_chart(dataset, frame, chart_title) do
+    chart =
+      VegaLite.new(width: 600, height: 800)
+      |> VegaLite.data_from_values(dataset, only: ["transfer_date", "quantity", "currency"])
+      |> VegaLite.mark(:rule)
+      |> VegaLite.encode_field(:x, "transfer_date", type: :temporal)
+      |> VegaLite.encode_field(:y, "quantity", type: :quantitative)
+      |> VegaLite.encode_field(:color, "currency", type: :nominal)
+
+    Kino.Frame.render(frame, chart)
+  end
+end
+```
+
+```elixir
+frame = Kino.Frame.new()
+Helper.plot_chart(exploded, frame, "title")
+frame
+```
+
+```elixir
+wallets_input
+|> Kino.Control.stream()
+|> Kino.listen(fn %{value: filter} ->
+  IO.inspect(filter)
+  Helper.filter_transfers(filter, exploded) |> Helper.plot_chart(frame, "title")
+end)
+```
+
+```elixir
+defmodule Iframe do
+  use Kino.JS
+
+  def new(source) do
+    Kino.JS.new(__MODULE__, source)
+  end
+
+  asset "main.js" do
+    """
+    export function init(ctx, source) {
+      var ifrm = document.createElement("iframe");
+      ifrm.setAttribute("src", source);
+      ifrm.style.width = "100%";
+      ifrm.style.height = "900px";
+      ifrm.style.border = "0";
+      ctx.root.appendChild(ifrm);
+    }
+    """
+  end
+end
+
+frame = Kino.Frame.new()
+to_render = Iframe.new("https://hexdocs.pm/kino/Kino.SmartCell.html")
+Kino.Frame.render(frame, to_render)
+frame
+```
