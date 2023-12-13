@@ -21,9 +21,10 @@ defmodule TurpiaWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", TurpiaWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TurpiaWeb do
+    pipe_through :api
+    resources "/transfers", TransferController
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:turpia_web, :dev_routes) do
