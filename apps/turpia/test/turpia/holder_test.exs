@@ -21,15 +21,20 @@ defmodule Turpia.HolderTest do
     end
 
     test "create_wallets/1 with valid data creates a wallets" do
-      valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662", name: "some name", type: "some type", currency: "some currency", quantity: 42, tens: 42}
+      valid_attrs = %{
+        type: "type",
+        name: "wallet name",
+        currency: "PLN",
+        quantity: 42,
+        tens: 10
+      }
 
       assert {:ok, %Wallets{} = wallets} = Holder.create_wallets(valid_attrs)
-      assert wallets.id == "7488a646-e31f-11e4-aace-600308960662"
-      assert wallets.name == "some name"
-      assert wallets.type == "some type"
-      assert wallets.currency == "some currency"
+      assert wallets.name == "wallet name"
+      assert wallets.type == "type"
+      assert wallets.currency == "PLN"
       assert wallets.quantity == 42
-      assert wallets.tens == 42
+      assert wallets.tens == 10
     end
 
     test "create_wallets/1 with invalid data returns error changeset" do
@@ -38,10 +43,16 @@ defmodule Turpia.HolderTest do
 
     test "update_wallets/2 with valid data updates the wallets" do
       wallets = wallets_fixture()
-      update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668", name: "some updated name", type: "some updated type", currency: "some updated currency", quantity: 43, tens: 43}
+
+      update_attrs = %{
+        name: "some updated name",
+        type: "some updated type",
+        currency: "some updated currency",
+        quantity: 43,
+        tens: 43
+      }
 
       assert {:ok, %Wallets{} = wallets} = Holder.update_wallets(wallets, update_attrs)
-      assert wallets.id == "7488a646-e31f-11e4-aace-600308960668"
       assert wallets.name == "some updated name"
       assert wallets.type == "some updated type"
       assert wallets.currency == "some updated currency"

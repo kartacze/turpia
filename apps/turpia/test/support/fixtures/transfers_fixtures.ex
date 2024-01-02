@@ -11,7 +11,9 @@ defmodule Turpia.TransfersFixtures do
     {:ok, transfer} =
       attrs
       |> Enum.into(%{
-
+        amount: 1,
+        currency: "PLN",
+        debitor: "kieszen"
       })
       |> Turpia.Transfers.create_transfer()
 

@@ -8,7 +8,9 @@ defmodule Turpia.TransfersTest do
 
     import Turpia.TransfersFixtures
 
-    @invalid_attrs %{}
+    @invalid_attrs %{
+      amount: "null"
+    }
 
     test "list_transfers/0 returns all transfers" do
       transfer = transfer_fixture()
@@ -21,7 +23,11 @@ defmodule Turpia.TransfersTest do
     end
 
     test "create_transfer/1 with valid data creates a transfer" do
-      valid_attrs = %{}
+      valid_attrs = %{
+        amount: 1,
+        currency: "PLN",
+        debitor: "kieszen"
+      }
 
       assert {:ok, %Transfer{} = transfer} = Transfers.create_transfer(valid_attrs)
     end

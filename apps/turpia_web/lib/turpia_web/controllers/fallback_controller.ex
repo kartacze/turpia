@@ -13,4 +13,11 @@ defmodule TurpiaWeb.FallbackController do
     |> put_view(html: TurpiaWeb.ErrorHTML, json: TurpiaWeb.ErrorJSON)
     |> render(:"404")
   end
+
+  def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: TurpiaWeb.ErrorJSON)
+    |> render(changeset.errors)
+  end
 end

@@ -2,12 +2,15 @@ defmodule TurpiaWeb.TransferControllerTest do
   use TurpiaWeb.ConnCase
 
   import Turpia.TransfersFixtures
+  import Turpia.AccountsFixtures
 
+  alias TurpiaWeb.UserAuth
   alias Turpia.Transfers.Transfer
 
   @create_attrs %{
     debitor: "some debitor",
-    amount: 42
+    amount: 42,
+    currency: "PLN"
   }
   @update_attrs %{
     debitor: "some updated debitor",
@@ -16,7 +19,13 @@ defmodule TurpiaWeb.TransferControllerTest do
   @invalid_attrs %{debitor: nil, amount: nil}
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = Turpia.AccountsFixtures.user_fixture()
+
+    conn =
+      conn
+      |> TurpiaWeb.ConnCase.set_authorization_token(user)
+
+    {:ok, conn: conn}
   end
 
   describe "index" do
@@ -49,7 +58,10 @@ defmodule TurpiaWeb.TransferControllerTest do
   describe "update transfer" do
     setup [:create_transfer]
 
-    test "renders transfer when data is valid", %{conn: conn, transfer: %Transfer{id: id} = transfer} do
+    test "renders transfer when data is valid", %{
+      conn: conn,
+      transfer: %Transfer{id: id} = transfer
+    } do
       conn = put(conn, ~p"/api/transfers/#{transfer}", transfer: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

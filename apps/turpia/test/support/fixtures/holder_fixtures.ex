@@ -16,10 +16,10 @@ defmodule Turpia.HolderFixtures do
     {:ok, wallets} =
       attrs
       |> Enum.into(%{
-        currency: "some currency",
+        currency: "PLN",
         name: unique_wallets_name(),
         quantity: 42,
-        tens: 42,
+        tens: 10,
         type: "some type"
       })
       |> Turpia.Holder.create_wallets()
