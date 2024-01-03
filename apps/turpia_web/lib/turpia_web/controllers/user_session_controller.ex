@@ -25,9 +25,9 @@ defmodule TurpiaWeb.UserSessionController do
     %{"email" => email, "password" => password} = user_params
 
     if user = Accounts.get_user_by_email_and_password(email, password) do
-      conn
-      |> put_flash(:info, "Welcome back!")
-      |> UserAuth.log_in_user(user, user_params)
+      token = Accounts.create_user_api_token(user)
+
+      render(conn, :index, access_token: "#{token}", token_type: "Bearer")
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       render(conn, :new, error_message: "Invalid email or password")

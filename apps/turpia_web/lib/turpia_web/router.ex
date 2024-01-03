@@ -30,7 +30,7 @@ defmodule TurpiaWeb.Router do
 
   scope "/api/auth", TurpiaWeb do
     pipe_through :api_auth
-    post "/api/auth", UserSessionController, :create
+    post "", UserSessionController, :create_json
   end
 
   # Other scopes may use custom stacks.

@@ -68,7 +68,7 @@ defmodule TurpiaWeb.ConnCase do
   It returns an updated `conn`.
   """
   def set_authorization_token(conn, user) do
-    token = Turpia.Accounts.generate_user_session_token(user)
+    token = Turpia.Accounts.create_user_api_token(user)
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})
