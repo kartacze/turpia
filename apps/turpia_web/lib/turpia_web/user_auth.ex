@@ -38,14 +38,26 @@ defmodule TurpiaWeb.UserAuth do
   if you are not using LiveView.
   """
   def log_in_user(conn, user, params \\ %{}) do
-    token = Accounts.generate_user_session_token(user)
+    redirect = get_session(conn, :redirect)
     user_return_to = get_session(conn, :user_return_to)
 
     conn
     |> renew_session()
+    |> handle_session(redirect, user_return_to, user, params)
+  end
+
+  defp handle_session(conn, nil, path, user, params) do
+    token = Accounts.generate_user_session_token(user)
+
+    conn
     |> put_token_in_session(token)
     |> maybe_write_remember_me_cookie(token, params)
-    |> redirect(to: user_return_to || signed_in_path(conn))
+    |> redirect(to: path || signed_in_path(conn))
+  end
+
+  defp handle_session(conn, url, _, user, _) do
+    token = Accounts.create_user_api_token(user)
+    redirect(conn, external: url <> "?" <> Plug.Conn.Query.encode(%{code: token, state: "xyz"}))
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do

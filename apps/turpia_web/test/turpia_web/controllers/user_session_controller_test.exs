@@ -40,6 +40,21 @@ defmodule TurpiaWeb.UserSessionControllerTest do
       assert response =~ ~p"/users/log_out"
     end
 
+    test "logs the user in and redirects", %{conn: conn, user: user} do
+      url = "https://www.mosze.icu"
+
+      conn =
+        conn
+        |> init_test_session(redirect: url)
+        |> post(~p"/users/log_in", %{
+          "user" => %{"email" => user.email, "password" => valid_user_password()}
+        })
+
+      # assert get_session(conn, :user_token)
+      [host | _] = String.split(redirected_to(conn), "?")
+      assert host == url
+    end
+
     test "logs the user in with remember me", %{conn: conn, user: user} do
       conn =
         post(conn, ~p"/users/log_in", %{

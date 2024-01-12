@@ -4,11 +4,17 @@ defmodule TurpiaWeb.UserSessionController do
   alias Turpia.Accounts
   alias TurpiaWeb.UserAuth
 
+  def new(conn, %{"redirect" => redirect}) do
+    conn
+    |> put_session(:redirect, redirect)
+    |> render(:new, error_message: nil)
+  end
+
   def new(conn, _params) do
     render(conn, :new, error_message: nil)
   end
 
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, %{"user" => user_params} = params) do
     %{"email" => email, "password" => password} = user_params
 
     if user = Accounts.get_user_by_email_and_password(email, password) do
