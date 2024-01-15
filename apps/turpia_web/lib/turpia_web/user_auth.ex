@@ -56,6 +56,8 @@ defmodule TurpiaWeb.UserAuth do
   end
 
   defp handle_session(conn, url, _, user, _) do
+    # nie ma obslugi czyszczenia api tokena
+
     token = Accounts.create_user_api_token(user)
     redirect(conn, external: url <> "?" <> Plug.Conn.Query.encode(%{code: token, state: "xyz"}))
   end

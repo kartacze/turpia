@@ -10,14 +10,16 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :turpia_web, TurpiaWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [host: "mosze.icu", port: 80],
+  server: true,
+  debug_errors: true,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Configures Swoosh API Client
 config :swoosh, :api_client, Turpia.Finch
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
