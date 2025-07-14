@@ -1,4 +1,3 @@
-import React from "react";
 import "./App.css";
 import { CreateRecord } from "./domain/budget/CreateRecord";
 import { RecordsList } from "./domain/budget/RecordsList";
