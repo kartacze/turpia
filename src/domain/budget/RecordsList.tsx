@@ -47,7 +47,7 @@ export function RecordsList() {
           </thead>
           <tbody>
             {records.map((record, i) => (
-              <tr>
+              <tr key={record.id}>
                 <th>{i + 1}</th>
                 <td>{(record.expense ? -1 : 1) * record.amount}</td>
                 <td>{record.date}</td>

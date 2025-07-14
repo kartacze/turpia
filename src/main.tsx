@@ -8,7 +8,11 @@ import { worker } from "./domain/api/worker.ts";
 const queryClient = new QueryClient();
 
 async function setup() {
-  await worker.start();
+  await worker.start({
+    serviceWorker: {
+      url: "/turpia/mockServiceWorker.js",
+    },
+  });
 
   createRoot(document.getElementById("root")!).render(
     <StrictMode>

@@ -12,6 +12,11 @@ export const Record = z.object({
   date: z.string({}).nonempty({ message: "Required" }),
 });
 
+export const DbRecord = Record.extend({
+  id: z.string(),
+});
+
 export const RecordList = z.array(Record);
 
 export type Record = z.infer<typeof Record>;
+export type DbRecord = z.infer<typeof DbRecord>;
