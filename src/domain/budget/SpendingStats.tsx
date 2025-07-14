@@ -26,8 +26,8 @@ export function SpendingStats({ records }: SpendingStatsProps) {
   const incomes_sum = getBalance(incomes);
 
   return (
-    <section className="mt-16 flex flex-col justify-center">
-      <div className="stats shadow">
+    <section className="md:mt-12 mt-4 flex flex-col justify-center ml-auto">
+      <div className="stats shadow stats-vertical md:stats-horizontal">
         <div className="stat place-items-center">
           <div className="stat-title">Expenses</div>
           <div className="stat-value text-error">{format(expenses_sum)}</div>

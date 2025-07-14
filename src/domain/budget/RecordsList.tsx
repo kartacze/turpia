@@ -34,8 +34,8 @@ export function RecordsList() {
   const records = recordsQuery.data;
 
   return (
-    <section className="mt-16 flex flex-col justify-center">
-      <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mt-5">
+    <section className="mt-16 flex flex-col justify-center mb-12">
+      <div className="overflow-x-auto rounded-box bg-base-100 mt-5">
         <table className="table">
           <thead>
             <tr>

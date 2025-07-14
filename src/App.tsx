@@ -17,7 +17,7 @@ export function App() {
           />
         </div>
       </div>
-      <div className="m-auto max-w-5xl flex mt-8 px-8 flex-col">
+      <div className="m-auto max-w-5xl flex mt-8 md:px-8 px-4 flex-col">
         <div>
           <CreateRecord />
         </div>
